@@ -1,0 +1,92 @@
+<html>
+<head>
+</head>
+<body>
+<div id="map-canvas" style="height:300px;width:100%;margin-bottom:10px;"></div>
+                                             <textarea name="location" id="location" class="with-border"  style="height:40px;" onblur="on_address(this.value)"></textarea>
+                                            <input type="hidden" id="lat" name="lat" value="55.5314076"/>
+                                            <input type="hidden" id="lang" name="lang" value="10.046474"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+	<script type="text/javascript">
+			
+				var marker;
+				var geocoder = new google.maps.Geocoder();
+				initialize();
+				
+				function initialize(lat,lng) {
+					
+					if($("#lat").val()!='')lat=$("#lat").val();
+					if($("#lang").val()!='')lng=$("#lang").val();
+					var myLatLng = new google.maps.LatLng(lat,lng);
+					var mapOptions = {
+						zoom: 11,
+						center: myLatLng,
+						mapTypeId: google.maps.MapTypeId.RoadMap
+					};
+		
+					var map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
+				
+					marker = new google.maps.Marker({
+						position: map.getCenter(),
+						draggable: true,
+						editable: true,
+						map: map,
+						title: 'Click to zoom'
+					});
+					marker.setMap(map);
+					google.maps.event.addListener(marker, "position_changed", getPolygonCoords);
+				}
+				function getPolygonCoords() {
+					var pos = marker.getPosition();
+					//document.getElementById('info').innerHTML = 'lat - '+pos.lat()+' lng - '+pos.lng();
+					$("#lat").val(pos.lat());
+					$("#lang").val(pos.lng());
+					var latlng = new google.maps.LatLng(pos.lat(), pos.lng());
+					  geocoder.geocode({'latLng': latlng}, function(results, status) {
+						if (status == google.maps.GeocoderStatus.OK) {
+						  if (results[1]) {
+							
+							$('#location').val(results[1].formatted_address);
+							
+							//infowindow.setContent(results[1].formatted_address);
+							//infowindow.open(map, marker);
+						  } else {
+							//alert('No results found');
+						  }
+						} else {
+						  console.log('Geocoder failed due to: ' + status);
+						}
+					  });
+				}
+				
+				function on_address()
+				{
+					var address = $("#location").val();
+					
+					//alert(address);
+					// google map init
+					if(typeof(address)!="undefined" && typeof(address)=='string'){
+						
+						var map;
+						
+						//general options for the map
+						geocoder.geocode( { 'address': address}, function(results, status) {
+							if (status == google.maps.GeocoderStatus.OK) {
+								var lat=results[0].geometry.location.lat();
+								var lng=results[0].geometry.location.lng();
+								//alert('lng'+lng);
+								$("#lat").val(lat);
+								$("#lang").val(lng);
+								initialize(lat,lng);
+							}
+						});
+					}
+				}
+				
+				
+			</script>
+</body>
+</html>
+
+

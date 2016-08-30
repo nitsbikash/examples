@@ -1,0 +1,40 @@
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script>
+            $(function(){
+             $("#chk_all").on('click',function(){
+                if($(this).is(':checked')){
+                    $('.chks').prop('checked',true);
+
+                } else {
+                    $('.chks').prop('checked',false);
+                }
+             });
+
+
+
+            $('.chks').on('click',function(){
+               if($(this).is(':checked')){
+                   if($('.chks:checked').length==$('.chks').length){
+                     $("#chk_all").prop('checked',true);
+                   } else {
+                     $("#chk_all").prop('checked',false);
+                   }
+               } else {
+                   $("#chk_all").prop('checked',false);
+               }
+            });
+ });
+            </script>
+    </head>
+    <body>
+        <input type="checkbox" value="" name="cbox[]" id="chk_all" class="uniform_on" />Check All<br>
+        <input type="checkbox" value="620" name="cbox[]" class=" chks" /><br>
+        <input type="checkbox" value="620" name="cbox[]" class=" chks" /><br>
+        <input type="checkbox" value="620" name="cbox[]" class=" chks" /><br>
+        <input type="checkbox" value="620" name="cbox[]" class=" chks" /><br>
+        <input type="checkbox" value="620" name="cbox[]" class=" chks" /><br>
+        <input type="checkbox" value="620" name="cbox[]" class=" chks" /><br>
+    </body>
+</html>
